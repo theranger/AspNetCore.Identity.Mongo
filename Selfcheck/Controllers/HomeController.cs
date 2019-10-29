@@ -1,25 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SampleSite.Identity;
 using Microsoft.AspNetCore.Identity;
 using System.Text.Encodings.Web;
 using Microsoft.Extensions.Logging;
 using SampleSite.Mailing;
 using System.Threading.Tasks;
-using AspNetCore.Identity.Mongo.Collections;
 using AspNetCore.Identity.Mongo.Model;
 using SampleSite.Exceptions;
 using System;
+using System.Linq;
+using Maddalena.Mongo;
+using MongoDB.Driver;
+using SampleSite.Services.Identity;
+using SampleSite.Services.Identity.AccountViewModels;
 
 namespace SampleSite.Controllers
 {
     public class HomeController : UserController
     {
         public HomeController(
-  UserManager<MaddalenaUser> userManager,
-  SignInManager<MaddalenaUser> signInManager,
+  UserManager<SampleUser> userManager,
+  SignInManager<SampleUser> signInManager,
   RoleManager<MongoRole> roleManager,
 
-  IIdentityUserCollection<MaddalenaUser> userCollection,
+  IMongoCollection<SampleUser> userCollection,
 
   IEmailSender emailSender,
   ILogger<ManageController> logger,
@@ -36,12 +39,9 @@ namespace SampleSite.Controllers
 
         public async Task<IActionResult> Index()
         {
-            foreach (var delUser in await UserCollection.GetAllAsync())
-            {
-                await UserCollection.DeleteAsync(delUser);
-            }
+            await UserCollection.DeleteManyAsync(x=> true);
 
-            await Register(new Identity.AccountViewModels.RegisterViewModel
+            await Register(new RegisterViewModel
             {
                 ConfirmPassword = TestData.Password,
                 Password = TestData.Password,
@@ -49,7 +49,7 @@ namespace SampleSite.Controllers
                 Username = TestData.Username
             });
 
-            await Login(new Identity.AccountViewModels.LoginViewModel
+            await Login(new LoginViewModel
             {
                 Password = TestData.Password,
                 RememberMe = true,
@@ -71,7 +71,7 @@ namespace SampleSite.Controllers
         {
             await ConfirmEmail(EmailSender.UserId, EmailSender.Token);
 
-            var user = await UserCollection.FindByIdAsync(EmailSender.UserId);
+            var user = await UserCollection.FirstOrDefaultAsync(x=>x.Id == EmailSender.UserId);
 
             if (!user.EmailConfirmed) throw new System.Exception("Confirm email fails");
         }
@@ -82,7 +82,7 @@ namespace SampleSite.Controllers
 
             try
             {
-                await Login(new Identity.AccountViewModels.LoginViewModel
+                await Login(new LoginViewModel
                 {
                     Password = "A VERY INVALID PASSWORD",
                     RememberMe = true,
@@ -103,7 +103,7 @@ namespace SampleSite.Controllers
 
             try
             {
-                await Login(new Identity.AccountViewModels.LoginViewModel
+                await Login(new LoginViewModel
                 {
                     Password = "A VERY INVALID PASSWORD",
                     RememberMe = true,

@@ -1,4 +1,4 @@
-﻿namespace SampleSite.Identity.ManageViewModels
+﻿namespace SampleSite.Services.Identity.ManageViewModels
 {
     public class ShowRecoveryCodesViewModel
     {

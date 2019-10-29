@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AspNetCore.Identity.Mongo.Model;
-using SampleSite.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using SampleSite.Services.Identity;
 
 namespace SampleSite.Controllers
 {
@@ -34,9 +35,9 @@ namespace SampleSite.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(MaddalenaUser user)
+        public async Task<ActionResult> Edit(SampleUser user)
         {
-            await UserCollection.UpdateAsync(user);
+            await UserCollection.ReplaceOneAsync(Builders<SampleUser>.Filter.Eq(x=>x.Id,user.Id), user);
             return Redirect("/user");
         }
 
@@ -44,8 +45,7 @@ namespace SampleSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string id)
         {
-            var user = await UserCollection.FindByIdAsync(id);
-            await UserCollection.DeleteAsync(user);
+            await UserCollection.DeleteOneAsync(x => x.Id == id);
             return Redirect("/user");
         }
     }

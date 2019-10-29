@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace SampleSite.Identity.ManageViewModels
+namespace SampleSite.Services.Identity.ManageViewModels
 {
     public class EnableAuthenticatorViewModel
     {

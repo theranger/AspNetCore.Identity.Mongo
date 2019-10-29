@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using AspNetCore.Identity.Mongo.Collections;
 using AspNetCore.Identity.Mongo.Model;
 using SampleSite.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 
 namespace SampleSite.Controllers
 {
@@ -13,12 +12,12 @@ namespace SampleSite.Controllers
     {
         private readonly UserManager<MaddalenaUser> _userManager;
         private readonly RoleManager<MongoRole> _roleManager;
-        readonly IIdentityUserCollection<MaddalenaUser> _userUserCollection;
+        readonly IMongoCollection<MaddalenaUser> _userUserCollection;
 
         public UserController(
             UserManager<MaddalenaUser> userManager,
             RoleManager<MongoRole> roleManager,
-            IIdentityUserCollection<MaddalenaUser> userCollection)
+            IMongoCollection<MaddalenaUser> userCollection)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -54,7 +53,7 @@ namespace SampleSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(MaddalenaUser user)
         {
-            await _userUserCollection.UpdateAsync(user);
+            await _userUserCollection.ReplaceOneAsync(x=>x.Id == user.Id, user);
             return Redirect("/user");
         }
 
@@ -62,8 +61,7 @@ namespace SampleSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string id)
         {
-            var user = await _userUserCollection.FindByIdAsync(id);
-            await _userUserCollection.DeleteAsync(user);
+            await _userUserCollection.DeleteOneAsync(x=>x.Id == id);
             return Redirect("/user");
         }
     }

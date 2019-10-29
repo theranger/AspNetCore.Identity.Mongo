@@ -4,14 +4,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using SampleSite.Extensions;
-using SampleSite.Identity;
-using SampleSite.Identity.ManageViewModels;
 using SampleSite.Mailing;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SampleSite.Services.Identity;
+using SampleSite.Services.Identity.ManageViewModels;
 
 namespace SampleSite.Controllers
 {
@@ -504,7 +504,7 @@ namespace SampleSite.Controllers
                 unformattedKey);
         }
 
-        private async Task LoadSharedKeyAndQrCodeUriAsync(MaddalenaUser user, EnableAuthenticatorViewModel model)
+        private async Task LoadSharedKeyAndQrCodeUriAsync(SampleUser user, EnableAuthenticatorViewModel model)
         {
             var unformattedKey = await UserManager.GetAuthenticatorKeyAsync(user);
             if (string.IsNullOrEmpty(unformattedKey))
