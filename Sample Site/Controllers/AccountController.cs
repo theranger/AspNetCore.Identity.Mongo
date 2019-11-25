@@ -2,14 +2,14 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using SampleSite.Extensions;
-using SampleSite.Identity;
-using SampleSite.Identity.AccountViewModels;
 using SampleSite.Mailing;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SampleSite.Services.Identity;
+using SampleSite.Services.Identity.AccountViewModels;
 
 namespace SampleSite.Controllers
 {
@@ -17,14 +17,14 @@ namespace SampleSite.Controllers
     [Route("[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<MaddalenaUser> _userManager;
-        private readonly SignInManager<MaddalenaUser> _signInManager;
+        private readonly UserManager<TestSiteUser> _userManager;
+        private readonly SignInManager<TestSiteUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
         public AccountController(
-            UserManager<MaddalenaUser> userManager,
-            SignInManager<MaddalenaUser> signInManager,
+            UserManager<TestSiteUser> userManager,
+            SignInManager<TestSiteUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger)
         {
@@ -217,7 +217,7 @@ namespace SampleSite.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new MaddalenaUser { UserName = model.Username, Email = model.Email };
+                var user = new TestSiteUser { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -244,7 +244,7 @@ namespace SampleSite.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(UserController.Index), "Home");
         }
 
         [HttpPost]
@@ -307,7 +307,7 @@ namespace SampleSite.Controllers
                 {
                     throw new ApplicationException("Error loading external login information during confirmation.");
                 }
-                var user = new MaddalenaUser { UserName = model.Email, Email = model.Email };
+                var user = new TestSiteUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -332,7 +332,7 @@ namespace SampleSite.Controllers
         {
             if (userId == null || code == null)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(UserController.Index), "Home");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -452,7 +452,7 @@ namespace SampleSite.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(UserController.Index), "Home");
             }
         }
 

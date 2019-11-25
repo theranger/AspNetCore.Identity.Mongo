@@ -1,19 +1,18 @@
-﻿using AspNetCore.Identity.Mongo;
-using SampleSite.Identity;
-using SampleSite.Mailing;
+using AspNetCore.Identity.Mongo;
 using Microsoft.AspNetCore.Builder;
+using SampleSite.Mailing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SampleSite.Services.Identity;
 
 namespace SampleSite
 {
     public class Startup
     {
         private string ConnectionString => Configuration.GetConnectionString("DefaultConnection");
-
 
         public Startup(IConfiguration configuration)
         {
@@ -25,27 +24,30 @@ namespace SampleSite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            services.AddIdentityMongoDbProvider<TestSiteUser>(identity =>
+                {
+                    identity.Password.RequireDigit = false;
+                    identity.Password.RequireLowercase = false;
+                    identity.Password.RequireNonAlphanumeric = false;
+                    identity.Password.RequireUppercase = false;
+                    identity.Password.RequiredLength = 1;
+                    identity.Password.RequiredUniqueChars = 0;
+                } ,
+                mongo =>
+                {
+                    mongo.ConnectionString = ConnectionString;
+                }
+            );
 
-            services.AddIdentityMongoDbProvider<MaddalenaUser>(mongo =>
-            {
-                mongo.ConnectionString = ConnectionString;
-            });
-
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddSingleton<IEmailSender, EmailSender>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseDeveloperExceptionPage();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -67,28 +69,8 @@ namespace SampleSite
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "search",
-                    template: "search",
-                    defaults: new { controller = "Blog", action = "Search" });
-
-                routes.MapRoute(
-                    name: "mynuget",
-                    template: "mynuget",
-                    defaults: new { controller = "Home", action = "MyNuget" });
-
-                routes.MapRoute(
-                    name: "read",
-                    template: "read/{link}",
-                    defaults: new { controller = "Blog", action = "Read" });
-
-                routes.MapRoute(
-                    name: "privacy",
-                    template: "privacy",
-                    defaults: new { controller = "Home", action = "Privacy" });
-
-                routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=User}/{action=Index}/{id?}");
             });
         }
     }

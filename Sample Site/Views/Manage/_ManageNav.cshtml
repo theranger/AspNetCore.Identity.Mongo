@@ -1,7 +1,7 @@
-﻿@using SampleSite.Identity
-@using SampleSite.Views.Manage
+﻿@using SampleSite.Views.Manage
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<MaddalenaUser> SignInManager
+@using SampleSite.Services.Identity
+@inject SignInManager<TestSiteUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

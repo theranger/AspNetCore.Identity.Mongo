@@ -1,8 +1,8 @@
 ﻿@using System.Linq
-@using SampleSite.Identity
 @using Microsoft.AspNetCore.Identity
-@model SampleSite.Identity.AccountViewModels.LoginViewModel
-@inject SignInManager<MaddalenaUser> SignInManager
+@using SampleSite.Services.Identity
+@model SampleSite.Services.Identity.AccountViewModels.LoginViewModel
+@inject SignInManager<TestSiteUser> SignInManager
 
 @{
     ViewData["Title"] = "Log in";

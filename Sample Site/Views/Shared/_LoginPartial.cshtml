@@ -1,7 +1,7 @@
-@using SampleSite.Identity
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<MaddalenaUser> SignInManager
-@inject UserManager<MaddalenaUser> UserManager
+@using SampleSite.Services.Identity
+@inject SignInManager<TestSiteUser> SignInManager
+@inject UserManager<TestSiteUser> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

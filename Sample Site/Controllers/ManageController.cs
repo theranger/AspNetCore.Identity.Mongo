@@ -4,14 +4,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using SampleSite.Extensions;
-using SampleSite.Identity;
-using SampleSite.Identity.ManageViewModels;
 using SampleSite.Mailing;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SampleSite.Services.Identity;
+using SampleSite.Services.Identity.ManageViewModels;
 
 namespace SampleSite.Controllers
 {
@@ -19,8 +19,8 @@ namespace SampleSite.Controllers
     [Route("[controller]/[action]")]
     public class ManageController : Controller
     {
-        private readonly UserManager<MaddalenaUser> _userManager;
-        private readonly SignInManager<MaddalenaUser> _signInManager;
+        private readonly UserManager<TestSiteUser> _userManager;
+        private readonly SignInManager<TestSiteUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
@@ -29,8 +29,8 @@ namespace SampleSite.Controllers
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
 
         public ManageController(
-          UserManager<MaddalenaUser> userManager,
-          SignInManager<MaddalenaUser> signInManager,
+          UserManager<TestSiteUser> userManager,
+          SignInManager<TestSiteUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
@@ -526,7 +526,7 @@ namespace SampleSite.Controllers
                 unformattedKey);
         }
 
-        private async Task LoadSharedKeyAndQrCodeUriAsync(MaddalenaUser user, EnableAuthenticatorViewModel model)
+        private async Task LoadSharedKeyAndQrCodeUriAsync(TestSiteUser user, EnableAuthenticatorViewModel model)
         {
             var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
             if (string.IsNullOrEmpty(unformattedKey))
