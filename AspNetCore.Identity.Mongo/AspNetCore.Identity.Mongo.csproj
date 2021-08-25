@@ -14,12 +14,14 @@
     <Authors>Matteo Fabbri</Authors>
     <Company />
     <Product>AspNetCore.Identity.Mongo</Product>
-    <Version>6.8.0</Version>
-    <AssemblyVersion>6.8.0.0</AssemblyVersion>
-    <FileVersion>6.8.0.0</FileVersion>
+    <Version>6.9.0</Version>
+    <AssemblyVersion>6.9.0.0</AssemblyVersion>
+    <FileVersion>6.9.0.0</FileVersion>
     <PackageProjectUrl>https://github.com/matteofabbri/AspNetCore.Identity.Mongo</PackageProjectUrl>
     <NeutralLanguage />
-    <PackageReleaseNotes>Added ability to set SslSettings and ClusterConfigurator.</PackageReleaseNotes>
+    <PackageReleaseNotes>improved performance;
+added extension that allows register only mongodb stores.
+</PackageReleaseNotes>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -36,8 +38,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.11" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.11" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.18" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.18" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.6" />
   </ItemGroup>
 
