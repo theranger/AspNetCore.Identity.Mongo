@@ -1,29 +1,21 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MongoDB.Driver;
 
-namespace AspNetCore.Identity.Mongo.Mongo
-{
-    public static class MongoUtil
-    {
-        private static FindOptions<TItem> LimitOneOption<TItem>() => new FindOptions<TItem>
-        {
-            Limit = 1
-        };
+namespace AspNetCore.Identity.Mongo.Mongo {
+    public static class MongoUtil {
+        private static FindOptions<TItem> LimitOneOption<TItem>() => new FindOptions<TItem> { Limit = 1 };
 
-
-        public static IMongoCollection<TItem> FromConnectionString<TItem>(MongoIdentityOptions options, string collectionName)
-        {
+        public static IMongoCollection<TItem> FromConnectionString<TItem>(MongoIdentityOptions options, string collectionName) {
             IMongoCollection<TItem> collection;
 
             var type = typeof(TItem);
 
 
-            if (options.ConnectionString != null)
-            {
+            if (options.ConnectionString != null) {
                 var url = new MongoUrl(options.ConnectionString);
                 var settings = MongoClientSettings.FromUrl(url);
 
@@ -31,11 +23,10 @@ namespace AspNetCore.Identity.Mongo.Mongo
                 settings.ClusterConfigurator = options.ClusterConfigurator;
 
                 var client = new MongoClient(settings);
-                collection = client.GetDatabase(url.DatabaseName ?? "default")
+                collection = client.GetDatabase(url.DatabaseName ?? options.DatabaseName ?? "default")
                     .GetCollection<TItem>(collectionName ?? type.Name.ToLowerInvariant());
             }
-            else
-            {
+            else {
                 var settings = new MongoClientSettings();
 
                 settings.SslSettings = options.SslSettings;
@@ -48,15 +39,16 @@ namespace AspNetCore.Identity.Mongo.Mongo
             return collection;
         }
 
-        public static async Task<TItem> FirstOrDefaultAsync<TItem>(this IMongoCollection<TItem> collection, Expression<Func<TItem, bool>> p, CancellationToken cancellationToken = default)
-        {
+        public static async Task<TItem> FirstOrDefaultAsync<TItem>(this IMongoCollection<TItem> collection, Expression<Func<TItem, bool>> p,
+            CancellationToken cancellationToken = default) {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
 
-            return await (await collection.FindAsync(p, LimitOneOption<TItem>(), cancellationToken).ConfigureAwait(false)).FirstOrDefaultAsync().ConfigureAwait(false);
+            return await (await collection.FindAsync(p, LimitOneOption<TItem>(), cancellationToken).ConfigureAwait(false)).FirstOrDefaultAsync()
+                .ConfigureAwait(false);
         }
 
-        public static async Task<IEnumerable<TItem>> WhereAsync<TItem>(this IMongoCollection<TItem> collection, Expression<Func<TItem, bool>> p, CancellationToken cancellationToken = default)
-        {
+        public static async Task<IEnumerable<TItem>> WhereAsync<TItem>(this IMongoCollection<TItem> collection, Expression<Func<TItem, bool>> p,
+            CancellationToken cancellationToken = default) {
             if (collection == null) throw new ArgumentNullException(nameof(collection));
 
             return (await collection.FindAsync(p, cancellationToken: cancellationToken).ConfigureAwait(false)).ToEnumerable();
