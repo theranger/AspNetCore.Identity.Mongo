@@ -8,18 +8,18 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>Mongo based identity framework for Asp.Net Core</Description>
 		<Copyright>Matteo Fabbri 2018</Copyright>
-		<RepositoryUrl>https://github.com/matteofabbri/AspNetCore.Identity.Mongo</RepositoryUrl>
+		<RepositoryUrl>https://github.com/theranger/AspNetCore.Identity.Mongo</RepositoryUrl>
 		<PackageTags>asp core identity mongo framework aspnetcore mongodb dotnetcore netcore</PackageTags>
-		<PackageId>AspNetCore.Identity.Mongo</PackageId>
+		<PackageId>Eleport.MongoIdentity</PackageId>
 		<Authors>Matteo Fabbri</Authors>
 		<Company />
-		<Product>AspNetCore.Identity.Mongo</Product>
+		<Product>Eleport.MongoIdentity</Product>
 		<Version>8.3.2</Version>
 		<AssemblyVersion>8.3.2.0</AssemblyVersion>
 		<FileVersion>8.3.2.0</FileVersion>
-		<PackageProjectUrl>https://github.com/matteofabbri/AspNetCore.Identity.Mongo</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/theranger/AspNetCore.Identity.Mongo</PackageProjectUrl>
 		<NeutralLanguage />
-		<PackageReleaseNotes>Removed obsolete properties.</PackageReleaseNotes>
+		<PackageReleaseNotes>Update to local corporate artifact.</PackageReleaseNotes>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 		<RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
